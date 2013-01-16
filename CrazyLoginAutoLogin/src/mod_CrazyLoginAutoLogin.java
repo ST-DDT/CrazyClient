@@ -46,7 +46,7 @@ public class mod_CrazyLoginAutoLogin extends BaseMod
 		ModLoader.setInGameHook(this, true, true);
 		// Register channel
 		ModLoader.registerPacketChannel(this, "CrazyLogin");
-		log("StartUp");
+		//log("StartUp");
 	}
 
 	@Override
@@ -69,7 +69,7 @@ public class mod_CrazyLoginAutoLogin extends BaseMod
 	@Override
 	public void clientDisconnect(final ayh clientHandler)
 	{
-		log("Disconnect");
+		//log("Disconnect");
 		server = null;
 		sAuth = null;
 		password = null;
@@ -81,7 +81,7 @@ public class mod_CrazyLoginAutoLogin extends BaseMod
 		if (packet.a.equals("CrazyLogin"))
 		{
 			final String data = new String(packet.c, Charset.forName("UTF-8"));
-			log("Packet", data);
+			//log("Packet", data);
 			final String[] split = PATTERN_SPACE.split(data, 2);
 			final String header = split[0];
 			final String args;
