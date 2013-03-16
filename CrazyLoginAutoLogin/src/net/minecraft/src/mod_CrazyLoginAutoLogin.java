@@ -1,3 +1,5 @@
+package net.minecraft.src;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -46,19 +48,19 @@ public class mod_CrazyLoginAutoLogin extends BaseMod
 		ModLoader.setInGameHook(this, true, true);
 		// Register channel
 		ModLoader.registerPacketChannel(this, "CrazyLogin");
-		//log("StartUp");
+		// log("StartUp");
 	}
 
 	@Override
-	public void clientConnect(final ayh handler)
+	public void clientConnect(final NetClientHandler handler)
 	{
-		final ce networkManager = handler.f();
+		final INetworkManager networkManager = handler.getNetManager();
 		if (networkManager == null)
 			server = null;
 		else
-			server = networkManager.c().toString();
+			server = networkManager.getSocketAddress().toString();
 		log("Connect", server);
-		for (final char c : u.b)
+		for (final char c : ChatAllowedCharacters.allowedCharactersArray)
 			server = server.replace(c, '_');
 		sAuth = null;
 		password = null;
@@ -67,21 +69,21 @@ public class mod_CrazyLoginAutoLogin extends BaseMod
 	}
 
 	@Override
-	public void clientDisconnect(final ayh clientHandler)
+	public void clientDisconnect(final NetClientHandler clientHandler)
 	{
-		//log("Disconnect");
+		// log("Disconnect");
 		server = null;
 		sAuth = null;
 		password = null;
 	}
 
 	@Override
-	public void clientCustomPayload(final ayh nch, final di packet)
+	public void clientCustomPayload(final NetClientHandler nch, final Packet250CustomPayload packet)
 	{
-		if (packet.a.equals("CrazyLogin"))
+		if (packet.channel.equals("CrazyLogin"))
 		{
-			final String data = new String(packet.c, Charset.forName("UTF-8"));
-			//log("Packet", data);
+			final String data = new String(packet.data, Charset.forName("UTF-8"));
+			// log("Packet", data);
 			final String[] split = PATTERN_SPACE.split(data, 2);
 			final String header = split[0];
 			final String args;
@@ -227,12 +229,12 @@ public class mod_CrazyLoginAutoLogin extends BaseMod
 
 	public File getDataFolder()
 	{
-		return new File(Minecraft.b(), "mods" + File.separator + "CrazyLogin");
+		return new File(Minecraft.getMinecraftDir(), "mods" + File.separator + "CrazyLogin");
 	}
 
 	public boolean isMultiplayer()
 	{
-		return !this.minecraft.B();
+		return !this.minecraft.isSingleplayer();
 	}
 
 	public void sendPacket(final String message)
@@ -243,10 +245,10 @@ public class mod_CrazyLoginAutoLogin extends BaseMod
 
 	public void sendPacket(final int size, final byte[] bytes)
 	{
-		final di packet = new di();
-		packet.a = "CrazyLogin";
-		packet.b = size;
-		packet.c = bytes;
+		final Packet250CustomPayload packet = new Packet250CustomPayload();
+		packet.channel = "CrazyLogin";
+		packet.length = size;
+		packet.data = bytes;
 		ModLoader.clientSendPacket(packet);
 	}
 }

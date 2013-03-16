@@ -1,6 +1,6 @@
 name: CrazyLoginAutoLogin
 author: ST-DDT
 version: 0.1
-# for Minecraft 1.4.6, 1.4.7
+# for Minecraft 1.5
 website: http://dev.bukkit.org/client-mods/crazyloginautologin/
 depend: [ModLoader]
